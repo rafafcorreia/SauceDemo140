@@ -1,9 +1,13 @@
 from behave import given, when, then
 from selenium.webdriver.common.by import By
+from selenium import webdriver
 import time
 
 @given(u'que acesso o site Sauce Demo')
 def step_impl(context):
+    context.driver = webdriver.Chrome()
+    context.driver.maximize_window()
+    context.driver.implicitly_wait(30)
     context.driver.maximize_window()
     context.driver.get("https://www.saucedemo.com/")
     
@@ -19,6 +23,7 @@ def step_impl(context, usuario, senha):
 def step_impl(context):
     assert context.driver.find_element(By.CSS_SELECTOR, ".title").text == "Products"
     time.sleep(2)
+    context.driver.quit()
 
 @when(u'preencho os campos de login com {standard_user} e {secret_sauce}')
 def step_impl(context, standard_user, secret_sauce):
