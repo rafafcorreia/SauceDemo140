@@ -71,7 +71,7 @@ def test_somar_dois_numeros_param(num1, num2, resultado_esperado):
     assert resultado_esperado == resultado_obtido
 
 @pytest.mark.parametrize('num1, num2, resultado_esperado', 
-                         ler_csv('./fixtures/massaSomar.csv'))
+                         ler_csv('./fixtures/csv/massaSomar.csv'))
 def test_somar_dois_numeros_csv(num1, num2, resultado_esperado):
     
     resultado_obtido = somar_dois_numeros(int(num1), int(num2))

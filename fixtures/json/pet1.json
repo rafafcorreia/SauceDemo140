@@ -1,0 +1,18 @@
+{
+    "id": 1237214124,
+    "category": {
+        "id": 0,
+        "name": "string"
+    },
+    "name": "Pipoca",
+    "photoUrls": [
+        "string"
+    ],
+    "tags": [
+        {
+            "id": 1,
+            "name": "vacinado"
+        }
+    ],
+    "status": "available"
+}
