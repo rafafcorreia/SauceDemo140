@@ -1,5 +1,7 @@
 import requests
 import json
+import pytest
+from utils.utils import ler_csv
 
 url = 'https://petstore.swagger.io/v2/pet'
 headers = {'Content-Type': 'application/json'}
@@ -36,7 +38,6 @@ def test_get_pet():
         url=url + f'/{pet_id}',
         headers=headers,
     )
-
     response_body = response.json()
 
     assert response.status_code == 200
@@ -55,7 +56,6 @@ def test_put_pet():
         data=json.dumps(data),
         timeout=5
     )
-
     response_body = response.json()
 
     assert response.status_code == 200
@@ -71,10 +71,46 @@ def test_delete_pet():
         url=url + f'/{pet_id}',
         headers=headers,
     )
-
     response_body = response.json()
 
     assert response.status_code == 200
     assert response_body['code'] == 200
     assert response_body['type'] == 'unknown'
     assert response_body['message'] == str(pet_id)
+
+@pytest.mark.parametrize('id, category_id, category_name, name, photoUrls, tags, status', 
+                         ler_csv('./fixtures/csv/massaPet.csv'))
+def test_post_pet_dinamico(id, category_id, category_name, name, photoUrls, tags, status):
+    pet = {}
+    pet['id'] = int(id)
+    pet['category'] = {}
+    pet['category']['id'] = int(category_id)
+    pet['category']['name'] = category_name
+    pet['name'] = name
+    pet['photoUrls'] = []
+    pet['photoUrls'].append(photoUrls)
+    pet['tags'] = []
+    
+    tags = tags.split(";")
+    for tag in tags:
+        tag = tag.split("-")
+        tagFormatada = {}
+        tagFormatada['id'] = int(tag[0])
+        tagFormatada['name'] = tag[1]
+        pet['tags'].append(tagFormatada)
+    
+    pet['status'] = status
+    pet = json.dumps(obj=pet, indent=4)
+    print('\n' + pet)
+
+    response = requests.post(
+        url=url,
+        headers=headers,
+        data=pet,
+        timeout=5
+    )
+    response_body = response.json()
+
+    assert response.status_code == 200
+    assert response_body['id'] == int(id)
+    assert response_body['name'] == name
